@@ -1,0 +1,82 @@
+name: notify-opsplan
+
+description: Action to notify BLN Ops plan
+
+author: Denis Iskandarov
+
+inputs:
+  project:
+    description: Target project in Ops Plan to update
+    required: false
+  imageTag:
+    description: Docker image tag. E.g "GITHUB_SHA"
+    required: false
+    # test needed
+    # not sure if default value can be referencing gh actions envs or contexts, e.g.: $GITHUB_SHA or ${{ github.sha }}
+    # if success replace default empty string with one of the above definitions and remove calculation block below
+    default: ${{ github.sha }}
+  branch:
+    description: Commit branch
+    required: false
+  author:
+    description: Commit author's email
+    required: true
+  url:
+    description: OPS Plan API URL
+    required: true
+  key:
+    description: Ops Plan API auth key
+    required: true
+
+outputs:
+  opsplan-response:
+    description: "Response from Ops Plan API"
+    value: ${{ steps.exec-notify.outputs.response }}
+
+runs:
+  using: composite
+  steps:
+
+  - id: prep-notify
+    run: |
+      # set project name
+      if [[ -z "$INPUT_PROJECT" ]]; then
+        echo ::set-output name=project::${GITHUB_REPOSITORY##*/}
+      else
+        echo ::set-output name=project::$INPUT_PROJECT
+      fi
+
+      # set branch
+      if [[ -z "$INPUT_BRANCH" ]]; then
+        echo ::set-output name=branch::${GITHUB_REF##*/}
+      else
+        echo ::set-output name=branch::$INPUT_BRANCH
+      fi
+
+      # # set imageTag
+      # if [[ -z "$INPUT_IMAGETAG" ]]; then
+      #   echo ::set-output name=imageTag::$GITHUB_SHA
+      # else
+      #   echo ::set-output name=imageTag::$INPUT_IMAGETAG
+      # fi
+
+    shell: bash
+
+  - id: exec-notify
+    run: |
+      data='{
+        "project": "${{ steps.prep-notify.outputs.project }}",
+        "author": "${{ inputs.author }}",
+        "branch": "${{ steps.prep-notify.outputs.branch }}",
+        "imageTag": "${{ steps.prep-notify.outputs.imageTag }}",
+        "accessKey": "${{ inputs.key }}"
+      }'
+
+      response=$(curl -s -w '\n%{http_code}' -H 'Content-Type: application/json' -d "${data}" "${{ inputs.url }}")
+
+      echo ::set-output name=response::$(tail -1 <<< $response)
+
+      echo $response
+      [[ "$(tail -1 <<< $response)" == "200" ]]
+
+    shell: bash
