@@ -68,7 +68,7 @@ runs:
         "project": "${{ steps.prep-notify.outputs.project }}",
         "author": "${{ inputs.author }}",
         "branch": "${{ steps.prep-notify.outputs.branch }}",
-        "imageTag": "${{ steps.prep-notify.outputs.imageTag }}",
+        "imageTag": "${{ inputs.imageTag }}",
         "accessKey": "${{ inputs.key }}"
       }'
 
