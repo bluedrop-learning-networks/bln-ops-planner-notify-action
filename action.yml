@@ -11,9 +11,6 @@ inputs:
   imageTag:
     description: Docker image tag. E.g "GITHUB_SHA"
     required: false
-    # test needed
-    # not sure if default value can be referencing gh actions envs or contexts, e.g.: $GITHUB_SHA or ${{ github.sha }}
-    # if success replace default empty string with one of the above definitions and remove calculation block below
     default: ${{ github.sha }}
   branch:
     description: Commit branch
@@ -52,13 +49,6 @@ runs:
       else
         echo ::set-output name=branch::$INPUT_BRANCH
       fi
-
-      # # set imageTag
-      # if [[ -z "$INPUT_IMAGETAG" ]]; then
-      #   echo ::set-output name=imageTag::$GITHUB_SHA
-      # else
-      #   echo ::set-output name=imageTag::$INPUT_IMAGETAG
-      # fi
 
     shell: bash
 
