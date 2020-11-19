@@ -1,16 +1,16 @@
-# notify-opsplan action
+# Ops Planner Notify Action
 
-Github action for notifying BLN Ops Plan Service.
+Github action for notifying the [Ops Planner](https://github.com/bluedrop-learning-networks/bln-ops-planner-service) service.
 
 ## Usage
 
 | Parameter    | Requirement | Description                                                         |
 | ------------ | ----------- | ------------------------------------------------------------------- |
-| `url`        | `required`  | Ops Plan Service URL                                                |
-| `key`        | `required`  | Ops Plan service auth token. Required                               |
-| `author`     | `required`  | Author email. Required, since email is not github-actions contexts  |
-| `project`    | `optional`  | Project name. Optional. Calculated.                                 |
-| `imageTag`   | `optional`  | Target project's docker image tag. Calculated. E.g "github.sha"     |
+| `url`        | `required`  | Ops Planner service URL.                                            |
+| `key`        | `required`  | Ops Planner service auth token.                                     |
+| `author`     | `required`  | Author email. Required, since email is not github-actions contexts. |
+| `project`    | `optional`  | Project name. Calculated.                                           |
+| `imageTag`   | `optional`  | Target project's docker image tag. Calculated. E.g "github.sha".    |
 | `branch`     | `optional`  | Commit branch. Calculated.                                          |
 
 ### Example
@@ -45,7 +45,7 @@ jobs:
     steps:
 
     - name: Notify Ops Planner
-      uses: bluedrop-learning-networks/bln-notify-opsplan-action@main
+      uses: bluedrop-learning-networks/bln-ops-planner-notify-action@main
       with:
         url: https://plan.service.com/notify
         key: secret.OPS_PLANNER_TOKEN

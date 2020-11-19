@@ -1,12 +1,12 @@
-name: notify-opsplan
+name: ops-planner-notify
 
-description: Action to notify BLN Ops plan
+description: Action to notify Ops Planner
 
 author: Denis Iskandarov
 
 inputs:
   project:
-    description: Target project in Ops Plan to update
+    description: Target project in Ops Planner to update
     required: false
   imageTag:
     description: Docker image tag. E.g "GITHUB_SHA"
@@ -19,15 +19,15 @@ inputs:
     description: Commit author's email
     required: true
   url:
-    description: OPS Plan API URL
+    description: Ops Planner API URL
     required: true
   key:
-    description: Ops Plan API auth key
+    description: Ops Planner API auth key
     required: true
 
 outputs:
-  opsplan-response:
-    description: "Response from Ops Plan API"
+  ops-planner-response:
+    description: "Response from Ops Planner API"
     value: ${{ steps.exec-notify.outputs.response }}
 
 runs:
