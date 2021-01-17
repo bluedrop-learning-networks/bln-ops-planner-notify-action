@@ -36,28 +36,16 @@ runs:
 
   - id: prep-notify
     run: |
-      # set project name
-      if [[ -z "$INPUT_PROJECT" ]]; then
-        echo ::set-output name=project::${GITHUB_REPOSITORY##*/}
-      else
-        echo ::set-output name=project::$INPUT_PROJECT
-      fi
-
-      # set branch
-      if [[ -z "$INPUT_BRANCH" ]]; then
-        echo ::set-output name=branch::${GITHUB_REF##*/}
-      else
-        echo ::set-output name=branch::$INPUT_BRANCH
-      fi
+      echo ::set-output name=defaultBranch::${GITHUB_REF##*/}
 
     shell: bash
 
   - id: exec-notify
     run: |
       data='{
-        "project": "${{ steps.prep-notify.outputs.project }}",
+        "project": "${{ inputs.project || github.event.repository.name }}",
         "author": "${{ inputs.author }}",
-        "branch": "${{ steps.prep-notify.outputs.branch }}",
+        "branch": "${{ inputs.branch || steps.prep-notify.outputs.defaultBranch}}",
         "imageTag": "${{ inputs.imageTag }}",
         "accessKey": "${{ inputs.key }}"
       }'
