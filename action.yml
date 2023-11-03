@@ -36,7 +36,7 @@ runs:
 
   - id: prep-notify
     run: |
-      echo ::set-output name=defaultBranch::${GITHUB_REF##*/}
+      echo "defaultBranch=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
 
     shell: bash
 
@@ -52,7 +52,7 @@ runs:
 
       response=$(curl -s -w '\n%{http_code}' -H 'Content-Type: application/json' -d "${data}" "${{ inputs.url }}")
 
-      echo ::set-output name=response::$(tail -1 <<< $response)
+      echo "response=$(tail -1 <<< $response)" >> $GITHUB_OUTPUT
 
       echo $response
       [[ "$(tail -1 <<< $response)" == "200" ]]
